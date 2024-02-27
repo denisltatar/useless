@@ -25,6 +25,7 @@ struct ContentView: View {
         NavigationView {
             // Displaying entirety of app (vertically)
             VStack {
+                Spacer(minLength: 35)
                 // Displaying logo and setting (horizontally)
                 HStack {
                     // Displaying my logo "useless"
@@ -48,7 +49,7 @@ struct ContentView: View {
                 }
                 
                 // For some reason this is only moving the logo up??? Figure it out later!
-                Spacer(minLength: 55)
+                Spacer(minLength: 30)
                 
                 // Displaying quote
                 Text(quote)
@@ -61,17 +62,18 @@ struct ContentView: View {
                 
                 // Replace this button with shake feature
                 // Displaying Button
-//                Button(action: {
-//                    self.randomlySelectQuote()
-//                }) {
-//                    Text("Generate")
-//                }
-//                .buttonStyle(.borderedProminent)
-//                .tint(.white)
-//                .foregroundColor(.black)
-//                .bold()
+                Button(action: {
+                    self.randomlySelectQuote()
+                }) {
+                    Text("Generate")
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.white)
+                .foregroundColor(.black)
+                .bold()
                 // Replace this button with shake feature
                 
+                // Shake to generate feature
                 Text("shake to generate")
                     .font(.custom("Cochin", size: 9))
                     .onReceive(NotificationCenter.default.publisher(for: Notification.Name("shakeDetected"))) { _ in
