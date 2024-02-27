@@ -9,38 +9,77 @@ import SwiftUI
 
 struct ContentView: View {
     let stringBacklog = [
-            "One day, or day one. You decide.",
-            "Smile more!",
-            "Haha got you to look",
-        ]
+        "One day, or day one. You decide.",
+        "Smile more!",
+        "Haha got you to look!"
+    ]
+    
     
     @State private var quote = "Hey there!"
     
     var body: some View {
-        VStack {
-            Text(quote).font(.custom("Cochin", size: 20))
-                            .multilineTextAlignment(.center)
-                            .padding()
-            
-            // Replacing text once tapped.
-            Button (action: {
-                self.randomlySelectQuote()
-            }, label: { 
-                Text("Generate")
-                }).buttonStyle(.borderedProminent)
+        NavigationView {
+            // Displaying entirety of app (vertically)
+            VStack {
+                // Displaying logo and setting (horizontally)
+                HStack {
+                    // Displaying my logo "useless"
+                    Image("useless")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30, height: 30)
+                        .padding(.leading, 20) // Adjust as needed
+                    
+                    // Add Spacer to push the logo to the left
+                    Spacer(minLength: 40)
+                    
+                    NavigationLink(destination: SettingsView()) {
+                        Image(systemName: "gearshape.fill")
+                            .imageScale(.medium)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                
+                Spacer(minLength: 30)
+                
+                // Displaying quote
+                Text(quote)
+                    .font(.custom("Cochin", size: 15))
+                    .bold()
+                    .multilineTextAlignment(.center)
+                    .padding()
+                
+                Spacer(minLength: 30)
+                
+                // Displaying Button
+                Button(action: {
+                    self.randomlySelectQuote()
+                }) {
+                    Text("Generate")
+                }
+                .buttonStyle(.borderedProminent)
                 .tint(.white)
                 .foregroundColor(.black)
                 .bold()
-                .padding()
+            }
+            .padding()
         }
-//        .padding()
     }
-    
-    func randomlySelectQuote() {
-        // Use a random index to select a string from the backlog
-        if let randomString = stringBacklog.randomElement() {
-            self.quote = randomString
-        }
+
+
+func randomlySelectQuote() {
+    // Use a random index to select a string from the backlog
+    if let randomString = stringBacklog.randomElement() {
+        self.quote = randomString
+    }
+}
+}
+
+struct SettingsView: View {
+    var body: some View {
+        Text("Settings View")
     }
 }
 
