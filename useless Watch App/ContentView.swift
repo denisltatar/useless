@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreMotion
 
 struct ContentView: View {
     let stringBacklog = [
@@ -16,6 +17,9 @@ struct ContentView: View {
     
     
     @State private var quote = "Hey there!"
+    
+    // Motion manager for detecting shakes
+    let motionManager = CMMotionManager()
     
     var body: some View {
         NavigationView {
@@ -43,7 +47,8 @@ struct ContentView: View {
                     .buttonStyle(PlainButtonStyle())
                 }
                 
-                Spacer(minLength: 10)
+                // For some reason this is only moving the logo up??? Figure it out later!
+                Spacer(minLength: 55)
                 
                 // Displaying quote
                 Text(quote)
@@ -52,30 +57,62 @@ struct ContentView: View {
                     .multilineTextAlignment(.center)
                     .padding()
                 
-                Spacer(minLength: 30)
+                Spacer(minLength: 55)
                 
+                // Replace this button with shake feature
                 // Displaying Button
-                Button(action: {
-                    self.randomlySelectQuote()
-                }) {
-                    Text("Generate")
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.white)
-                .foregroundColor(.black)
-                .bold()
+//                Button(action: {
+//                    self.randomlySelectQuote()
+//                }) {
+//                    Text("Generate")
+//                }
+//                .buttonStyle(.borderedProminent)
+//                .tint(.white)
+//                .foregroundColor(.black)
+//                .bold()
+                // Replace this button with shake feature
+                
+                Text("shake to generate")
+                    .font(.custom("Cochin", size: 9))
+                    .onReceive(NotificationCenter.default.publisher(for: Notification.Name("shakeDetected"))) { _ in
+                        self.randomlySelectQuote()
+                    }
+                
             }
             .padding()
         }
+        .onAppear {
+            startMotionManager()
+        }
+        .onDisappear {
+            stopMotionManager()
+        }
+    }
+    
+    func startMotionManager() {
+        if motionManager.isAccelerometerAvailable {
+            motionManager.accelerometerUpdateInterval = 0.2
+            motionManager.startAccelerometerUpdates(to: .main) { data, error in
+                guard let data = data, error == nil else { return }
+
+                if abs(data.acceleration.x) + abs(data.acceleration.y) + abs(data.acceleration.z) > 3 {
+                    NotificationCenter.default.post(name: Notification.Name("shakeDetected"), object: nil)
+                }
+            }
+        }
+    }
+    
+    func stopMotionManager() {
+        motionManager.stopAccelerometerUpdates()
     }
 
 
-func randomlySelectQuote() {
-    // Use a random index to select a string from the backlog
-    if let randomString = stringBacklog.randomElement() {
-        self.quote = randomString
+    func randomlySelectQuote() {
+        // Use a random index to select a string from the backlog
+        if let randomString = stringBacklog.randomElement() {
+            self.quote = randomString
+        }
     }
-}
 }
 
 struct SettingsView: View {
@@ -94,7 +131,6 @@ struct SettingsView: View {
                     .font(.custom("Cochin", size: 7))
                     .bold()
                     .tint(.gray)
-                
             }
             
             // Adding Toggle
