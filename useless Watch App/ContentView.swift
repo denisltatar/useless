@@ -33,6 +33,7 @@ struct ContentView: View {
                     // Add Spacer to push the logo to the left
                     Spacer(minLength: 40)
                     
+                    // Adding settings gear
                     NavigationLink(destination: SettingsView()) {
                         Image(systemName: "gearshape.fill")
                             .imageScale(.medium)
@@ -42,7 +43,7 @@ struct ContentView: View {
                     .buttonStyle(PlainButtonStyle())
                 }
                 
-                Spacer(minLength: 30)
+                Spacer(minLength: 10)
                 
                 // Displaying quote
                 Text(quote)
@@ -78,8 +79,31 @@ func randomlySelectQuote() {
 }
 
 struct SettingsView: View {
+    @State private var notificationsEnabled = false
+    
     var body: some View {
-        Text("Settings View")
+        Text("Settings")
+        .bold()
+        
+        HStack {
+            VStack (alignment: .leading) {
+                Text("Notifications")
+                    .font(.custom("Cochin", size: 14))
+                    .bold()
+                Text("Get notified every: 3 hours")
+                    .font(.custom("Cochin", size: 7))
+                    .bold()
+                    .tint(.gray)
+                
+            }
+            
+            // Adding Toggle
+            Toggle(isOn: $notificationsEnabled) {
+                // Add action functionality to this later...
+            }
+        }
+        
+        Spacer(minLength: 10)
     }
 }
 
