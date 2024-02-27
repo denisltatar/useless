@@ -8,33 +8,39 @@
 import SwiftUI
 
 struct ContentView: View {
+    let stringBacklog = [
+            "One day, or day one. You decide.",
+            "Smile more!",
+            "Haha got you to look",
+        ]
+    
+    @State private var quote = "Hey there!"
+    
     var body: some View {
         VStack {
-
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundColor(.accentColor)
+            Text(quote).font(.custom("Cochin", size: 20))
+                            .multilineTextAlignment(.center)
+                            .padding()
             
-//            Button {
-//                // Execute action
-//            } label: {
-//                Image(systemName: "square.and.arrow.up")
-//            }
-            var quote = "Hello Jamie!"
-            Text(quote).font(.custom("Cochin", fixedSize: 10))
-            
-            // Creating a simple string variable to be replace upon a button being tapped
+            // Replacing text once tapped.
             Button (action: {
-                // Execute action
-                .onChange(of: quote, perform: { quote in
-//                    quote = "Hello dawg!")
-                    // https://chat.openai.com/share/d0847da2-5ba6-4caa-a0b1-fc5857b8ec41
-//                    print(quote)
-                })
-            }, label: { Text("Generate")}).buttonStyle(.borderedProminent).tint(.white).foregroundColor(.black).bold()
-
+                self.randomlySelectQuote()
+            }, label: { 
+                Text("Generate")
+                }).buttonStyle(.borderedProminent)
+                .tint(.white)
+                .foregroundColor(.black)
+                .bold()
+                .padding()
         }
-        .padding()
+//        .padding()
+    }
+    
+    func randomlySelectQuote() {
+        // Use a random index to select a string from the backlog
+        if let randomString = stringBacklog.randomElement() {
+            self.quote = randomString
+        }
     }
 }
 
