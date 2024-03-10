@@ -12,7 +12,8 @@ struct ContentView: View {
     let stringBacklog = [
         "One day, or day one. You decide.",
         "Smile more!",
-        "Haha got you to look!"
+        "Haha got you to look!",
+        "This is a super long text and quote to do a test test test test test",
     ]
     
     
@@ -23,72 +24,91 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            // Displaying entirety of app (vertically)
+                // Displaying entirety of app (vertically)
             VStack {
-                Spacer(minLength: 35)
-                // Displaying logo and setting (horizontally)
-                HStack {
-                    // Displaying my logo "useless"
-                    Image("useless")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
-                        .padding(.leading, 20) // Adjust as needed
-                    
-                    // Add Spacer to push the logo to the left
-                    Spacer(minLength: 40)
-                    
-                    // Adding settings gear
-                    NavigationLink(destination: SettingsView()) {
-                        Image(systemName: "gearshape.fill")
-                            .imageScale(.medium)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+//                    Spacer()
+                    // Displaying logo and setting (horizontally)
+                    HStack {
+                        // Displaying my logo "useless"
+                        Image("useless")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                            .baselineOffset(5) // Vertically align the logo with the gear icon
+                            .padding(.leading, 20) // Adjust as needed
+
+                        Spacer() // Fill remaining space
+
+                        // Adding settings gear
+                        NavigationLink(destination: SettingsView()) {
+                            Image(systemName: "gearshape.fill")
+                                .imageScale(.medium)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
-                    .buttonStyle(PlainButtonStyle())
-                }
+//                    .padding(.top, 10)
+                    .fixedSize(horizontal: false, vertical: true) // Add this line to keep the size fixed
                 
-                // For some reason this is only moving the logo up??? Figure it out later!
-                Spacer(minLength: 30)
                 
-                // Displaying quote
-                Text(quote)
-                    .font(.custom("Cochin", size: 15))
+                    // For some reason this is only moving the logo up??? Figure it out later!
+                    //                Spacer(minLength: 30)
+                    Spacer()
+                    
+                    // Displaying quote
+                    Text(quote)
+                        .font(.custom("Cochin", size: dynamicFontSize()))
+                        .bold()
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .fixedSize(horizontal: false, vertical: true) // Allow multi-line text
+                    
+                    //                Spacer(minLength: 55)
+                    Spacer()
+                    
+                    // Replace this button with shake feature
+                    // Displaying Button
+                    Button(action: {
+                        self.randomlySelectQuote()
+                    }) {
+                        Text("Generate")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.white)
+                    .foregroundColor(.black)
                     .bold()
-                    .multilineTextAlignment(.center)
-                    .padding()
-                
-                Spacer(minLength: 55)
-                
-                // Replace this button with shake feature
-                // Displaying Button
-                Button(action: {
-                    self.randomlySelectQuote()
-                }) {
-                    Text("Generate")
+                    .frame(alignment: .bottom) // Align to the bottom of the screen
+                // Spacer to push the button to the bottom of the screen
+                            Spacer()
+                    // Replace this button with shake feature
+                    
+                    // Shake to generate feature
+                    //                Text("shake to generate")
+                    //                    .font(.custom("Cochin", size: 9))
+                    //                    .onReceive(NotificationCenter.default.publisher(for: Notification.Name("shakeDetected"))) { _ in
+                    //                        self.randomlySelectQuote()
+                    //                    }
+                    
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.white)
-                .foregroundColor(.black)
-                .bold()
-                // Replace this button with shake feature
-                
-                // Shake to generate feature
-//                Text("shake to generate")
-//                    .font(.custom("Cochin", size: 9))
-//                    .onReceive(NotificationCenter.default.publisher(for: Notification.Name("shakeDetected"))) { _ in
-//                        self.randomlySelectQuote()
-//                    }
-                
+                .padding()
             }
-            .padding()
-        }
-        .onAppear {
-            startMotionManager()
-        }
-        .onDisappear {
-            stopMotionManager()
-        }
+            .onAppear {
+                startMotionManager()
+            }
+            .onDisappear {
+                stopMotionManager()
+            }
+    }
+    
+    // Function to calculate dynamic font size based on quote length
+    func dynamicFontSize() -> CGFloat {
+        // Adjust as needed
+        let maxLength = 25
+        let scaleFactor: CGFloat = 0.8
+        let adjustedSize = CGFloat(maxLength) * scaleFactor
+        // Minimum font size
+        return max(12, adjustedSize)
     }
     
     func startMotionManager() {
@@ -125,6 +145,7 @@ struct SettingsView: View {
         Spacer(minLength: 10)
         Form {
             Section() {
+                // Add logic to notifications being enabled!
                 Toggle(isOn: $notificationsEnabled) {
                     Text("Notifications")
                     Text("Get notified every 3 hours")
