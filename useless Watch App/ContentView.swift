@@ -74,11 +74,11 @@ struct ContentView: View {
                 // Replace this button with shake feature
                 
                 // Shake to generate feature
-                Text("shake to generate")
-                    .font(.custom("Cochin", size: 9))
-                    .onReceive(NotificationCenter.default.publisher(for: Notification.Name("shakeDetected"))) { _ in
-                        self.randomlySelectQuote()
-                    }
+//                Text("shake to generate")
+//                    .font(.custom("Cochin", size: 9))
+//                    .onReceive(NotificationCenter.default.publisher(for: Notification.Name("shakeDetected"))) { _ in
+//                        self.randomlySelectQuote()
+//                    }
                 
             }
             .padding()
@@ -121,27 +121,19 @@ struct SettingsView: View {
     @State private var notificationsEnabled = false
     
     var body: some View {
-        Text("Settings")
-        .bold()
-        
-        HStack {
-            VStack (alignment: .leading) {
-                Text("Notifications")
-                    .font(.custom("Cochin", size: 14))
-                    .bold()
-                Text("Get notified every: 3 hours")
-                    .font(.custom("Cochin", size: 7))
-                    .bold()
-                    .tint(.gray)
-            }
-            
-            // Adding Toggle
-            Toggle(isOn: $notificationsEnabled) {
-                // Add action functionality to this later...
+    Text("Settings").bold().frame(maxWidth: .infinity, alignment: .center)
+        Spacer(minLength: 10)
+        Form {
+            Section() {
+                Toggle(isOn: $notificationsEnabled) {
+                    Text("Notifications")
+                    Text("Get notified every 3 hours")
+                        .font(.custom("Cochin", size: 7))
+                        .bold()
+                        .tint(.gray)
+                }
             }
         }
-        
-        Spacer(minLength: 10)
     }
 }
 
