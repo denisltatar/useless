@@ -70,7 +70,8 @@ struct ContentView: View {
                     // Replace this button with shake feature
                     // Displaying Button
                     Button(action: {
-                        self.randomlySelectQuote()
+//                        self.randomlySelectQuote()
+                        self.generateQuoteFromAPI()
                     }) {
                         Text("Generate")
                     }
@@ -109,6 +110,80 @@ struct ContentView: View {
         let adjustedSize = CGFloat(maxLength) * scaleFactor
         // Minimum font size
         return max(12, adjustedSize)
+    }
+    
+    func generateQuoteFromAPI() {
+        // Assigning our API key
+        let apiKey = "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"
+        
+        // Checking if API key actually exists
+        if apiKey.isEmpty {
+            print("API key is missing!")
+            return
+        }
+        
+        // OpenAI API endpoint
+//        let apiUrl = URL(string: "https://api.openai.com/v1/chat/completions")!
+        let apiUrl = URL(string: "https://api.openai.com/v1/chat/completions")!
+        
+        // Prompt for Chat GPT
+        let prompt = "Generate a quote that's either really funny or motivating. Make it no longer than 30 tokens in length..."
+        
+        // Making our request
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        
+        let requestBody: [String: Any] = [
+            "model": "gpt-3.5-turbo",
+            "messages": [
+                ["role": "system", "content": "You are a helpful assistant."],
+                ["role": "user", "content": prompt]
+            ]
+        ]
+        
+        // Encoding request
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: requestBody)
+            request.httpBody = jsonData
+        } catch {
+            print("Error encoding request body: \(error.localizedDescription)")
+            return
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data, error == nil else {
+                    // Catching error in quote if one exists
+                    print("Error fetching quote: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+            
+            // Print the raw JSON response for debugging
+            print("Raw Response: \(String(data: data, encoding: .utf8) ?? "Invalid JSON")")
+                
+            do {
+                    if let responseJSON = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                       let choices = responseJSON["choices"] as? [[String: Any]],
+                       let firstChoice = choices.first,
+                       let message = firstChoice["message"] as? [String: Any],
+                       let text = message["content"] as? String {
+                        DispatchQueue.main.async {
+                            // Updating our quote with ChatGPT's quote.
+//                            print("WE GET HERE!")
+//                            print("Generated Quote: \(text)")
+//                            print(responseJSON)
+                            self.quote = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                        }
+                    // Error printing
+                    } else {
+                        print("Error extracting quote from API response.")
+                    }
+                // Error printing
+                } catch {
+                    print("Error parsing API response: \(error.localizedDescription)")
+                }
+            }.resume()
     }
     
     func startMotionManager() {
