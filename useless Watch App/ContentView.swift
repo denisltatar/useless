@@ -114,6 +114,7 @@ struct ContentView: View {
     
     func generateQuoteFromAPI() {
         // Assigning our API key
+        // API key is old, REPLACE this one from your personal account
         let apiKey = "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"
         
         // Checking if API key actually exists
