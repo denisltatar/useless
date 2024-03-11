@@ -1,6 +1,6 @@
  ## ChatGPT Quote Generator for Apple Watch
-<img width="469" alt="Screenshot 2024-03-10 at 8 12 20 PM" src="https://github.com/denisltatar/useless/assets/17160832/4f6886f6-cebc-423b-ad2a-6a5a1b21174b">
-<img width="395" alt="Screenshot 2024-03-10 at 8 13 20 PM" src="https://github.com/denisltatar/useless/assets/17160832/7665c4f6-4a12-4ac9-9efc-bcc554d1477e">
+<img width="369" alt="Screenshot 2024-03-10 at 8 12 20 PM" src="https://github.com/denisltatar/useless/assets/17160832/4f6886f6-cebc-423b-ad2a-6a5a1b21174b">
+<img width="295" alt="Screenshot 2024-03-10 at 8 13 20 PM" src="https://github.com/denisltatar/useless/assets/17160832/7665c4f6-4a12-4ac9-9efc-bcc554d1477e">
 
 
 ### Description
@@ -14,7 +14,7 @@ Introducing **useless** - a Watch OS application that bugs you, but in the best 
 - **API Integration**: Connects with OpenAI's API to access the latest conversational AI models.
 - **SwiftUI**: Crafted using SwiftUI for a smooth and responsive user experience.
 - **Notifications**: Receive funny/motivational quotes every three hours
-<img width="390" alt="Screenshot 2024-03-10 at 8 13 32 PM" src="https://github.com/denisltatar/useless/assets/17160832/c0a0af90-2144-4c0d-944f-f3ae55eeffc5">
+<img width="290" alt="Screenshot 2024-03-10 at 8 13 32 PM" src="https://github.com/denisltatar/useless/assets/17160832/c0a0af90-2144-4c0d-944f-f3ae55eeffc5">
 
 ### Setup
 To use this app, clone the repository and enter your OpenAI API key in the designated place within the Swift code. Make sure to handle your API key securely and comply with OpenAI's use case policies.
