@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreMotion
+import UserNotifications
 
 struct ContentView: View {
     let stringBacklog = [
@@ -211,6 +212,74 @@ struct ContentView: View {
             self.quote = randomString
         }
     }
+    
+    // Creating notifications with prompts
+    // https://www.youtube.com/watch?v=dxe86OWc2mI&ab_channel=MartinLasek
+//    func checkForPermission() {
+//        let notificationCenter = UNUserNotificationCenter.current()
+//        notificationCenter.getNotificationSettings { settings in
+//            switch settings.authorizationStatus {
+//                // If the notificatio isn't determined, check if it's allowed, and send it off
+//                case .notDetermined:
+//                    notificationCenter.requestAuthorization(options: [.alert, .sound]) { didAllow, error in
+//                        if didAllow {
+//                        self.dispatchNotification()
+//                        }
+//                    }
+//                // If denied, then we can't do anything
+//                case .denied:
+//                    return
+//                // If user opted in, then fire off notification
+//                case .authorized:
+//                    self.dispatchNotification()
+//                default:
+//                    return
+//            }
+//        }
+//    }
+//    
+//    func dispatchNotification() {
+//        let identifier = "morning-notification"
+//        let title = "Quote for you!"
+//        let body = "Don't be lazy little butt!"
+//        let hour = 17
+//        let minute = 20
+//        let isDaily = true
+//        
+//        let notificationCenter = UNUserNotificationCenter.current()
+//        
+//        let content = UNMutableNotificationContent()
+//        content.title = title
+//        content.body = body
+//        content.sound = .default
+//        
+//        let calendar = Calendar.current
+//        var dateComponents = DateComponents (calendar: calendar, timeZone: TimeZone.current)
+//        dateComponents.hour = hour
+//        dateComponents.minute = minute
+//        
+//        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: isDaily)
+//        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+//        
+//        notificationCenter.removePendingNotificationRequests(withIdentifiers: [identifier])
+//        notificationCenter.add(request)
+//    }
+    
+    // Function to request permission for notifications
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+            if granted {
+                print("Notifications permission granted")
+                // Register for remote notifications if permission is granted
+                WKExtension.shared().registerForRemoteNotifications()
+            } else {
+                print("Notifications permission denied: \(error?.localizedDescription ?? "")")
+            }
+        }
+    }
+    
+    
+    
 }
 
 struct SettingsView: View {
