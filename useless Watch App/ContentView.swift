@@ -162,7 +162,7 @@ struct ContentView: View {
                 }
             
             // Print the raw JSON response for debugging
-            print("Raw Response: \(String(data: data, encoding: .utf8) ?? "Invalid JSON")")
+//            print("Raw Response: \(String(data: data, encoding: .utf8) ?? "Invalid JSON")")
                 
             do {
                     if let responseJSON = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
@@ -175,10 +175,13 @@ struct ContentView: View {
 //                            print("WE GET HERE!")
 //                            print("Generated Quote: \(text)")
 //                            print(responseJSON)
-                            self.quote = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                            self.scheduleNotification()
+//                            self.quote = text.trimmingCharacters(in: .whitespacesAndNewlines)
                         }
                     // Error printing
                     } else {
+                        // REMOVE THIS IN THE FUTURE ONCE YOU GET OPENAI API KEY BACK AND RUNNING!
+                        self.scheduleNotification()
                         print("Error extracting quote from API response.")
                     }
                 // Error printing
@@ -188,6 +191,64 @@ struct ContentView: View {
             }.resume()
     }
     
+    // --- NOTIFICATIONS FOR USELESS ---
+    // Where I left off: all of these three functions work, however, I think I need payload
+    // Follow this link to create one and integrate it in this app:
+    // https://developer.apple.com/tutorials/swiftui/creating-a-watchos-app#Create-a-custom-notification-interface
+    
+    func scheduleNotification() {
+        // Request notification authorization if not already granted
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            if settings.authorizationStatus == .authorized {
+                // Proceed to schedule notification
+                DispatchQueue.main.async {
+                    self.internalScheduleNotification()
+                }
+            } else {
+                // Request authorization first
+                self.requestNotificationAuthorization()
+            }
+        }
+    }
+    
+    // Requesting permission to have notifications fly in
+    func requestNotificationAuthorization() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if granted {
+                print("Notification authorization granted!")
+            } else {
+                print("Notification authorization denied!")
+            }
+        }
+    }
+    
+    private func internalScheduleNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = "New Notification"
+        content.body = "This is a test notification"
+        
+        // Configure the trigger for the notification (e.g., time-based trigger)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+        
+        // Create the request for the notification
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        
+        // Add the request to the notification center
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling notification: \(error.localizedDescription)")
+            } else {
+                print("Notification scheduled successfully. Here's your message")
+                print(content.title)
+                print(content.body)
+            }
+        }
+    }
+    // --- NOTIFICATIONS FOR USELESS ---
+    
+    // --- Sensing Motion ---
     func startMotionManager() {
         if motionManager.isAccelerometerAvailable {
             motionManager.accelerometerUpdateInterval = 0.2
@@ -213,6 +274,8 @@ struct ContentView: View {
         }
     }
     
+    // --- Sensing Motion ---
+    
     // Creating notifications with prompts
     // https://www.youtube.com/watch?v=dxe86OWc2mI&ab_channel=MartinLasek
 //    func checkForPermission() {
@@ -237,7 +300,7 @@ struct ContentView: View {
 //            }
 //        }
 //    }
-//    
+//
 //    func dispatchNotification() {
 //        let identifier = "morning-notification"
 //        let title = "Quote for you!"
@@ -266,19 +329,17 @@ struct ContentView: View {
 //    }
     
     // Function to request permission for notifications
-    func requestNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
-            if granted {
-                print("Notifications permission granted")
-                // Register for remote notifications if permission is granted
-                WKExtension.shared().registerForRemoteNotifications()
-            } else {
-                print("Notifications permission denied: \(error?.localizedDescription ?? "")")
-            }
-        }
-    }
-    
-    
+//    func requestNotificationPermission() {
+//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+//            if granted {
+//                print("Notifications permission granted")
+//                // Register for remote notifications if permission is granted
+//                WKExtension.shared().registerForRemoteNotifications()
+//            } else {
+//                print("Notifications permission denied: \(error?.localizedDescription ?? "")")
+//            }
+//        }
+//    }
     
 }
 
